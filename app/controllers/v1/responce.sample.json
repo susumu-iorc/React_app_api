@@ -1,0 +1,47 @@
+[
+    {"comment" : "拠点住所存在の確認",
+     "success" : "住所住所が登録されているか, true: 存在する | false: 存在しない [bool]",
+     "data"    : {
+                  "uid"          : "確認したuidを返却する [string]"
+                 }
+    },
+    {"comment" : "ユーザー情報の取得",
+     "success" : "ユーザーが存在するかどうか, true: 存在する | false: 存在しない [bool]",
+     "data"    : {
+                  "uid"            :"確認したuidを返却する [string]",
+                  "user_post_code" : "ユーザーの郵便番号 [string]",
+                  "user_pref"      : "ユーザーの都道府県 [string]",
+                  "user_city"      : "ユーザーの市区町村 [string]",
+                  "user_area"      : "ユーザーの町域番地 [string]",
+                  "user_lat"       : "ユーザーの緯度 [string]",
+                  "user_lng"       : "ユーザーの経度 [string]"
+                 }
+
+    },
+    {"comment" : "お店一覧",
+     "success" : "お店一覧が取得できたかどうか, true: 成功 | false: 失敗 [bool]",
+     "data"    : {
+                  "uid" :"確認したuidを返却する [string]",
+                  "total" : "取得数[number]",
+                  "sort"   : "どのようなソートを行ったか 0: 近い順 | 1: 遠い順 | 2: お気に入り順 [number]",
+                  "0"     :{
+                            "shop_name"    : "お店の名前 [string]",
+                            "shop_address" : "お店の住所 [string]",
+                            "shop_lat"     : "お店の緯度 [string]",
+                            "shop_lng"     : "お店の経度 [string]",
+                            "place_id"     : "お店のplace_id(google api) [string]"
+                           }
+                 }
+    
+    },
+    {"comment" : "お店の情報",
+     "success" : "お店の情報が取得できたかどうか true: 成功 | false: 失敗",
+     "data"    : {
+                  "uid"      : "確認したuidを返却する [string]",
+                  "memo"     : "メモ [string]",
+                  "count"    : "訪問数 [number]",
+                  "favorite" : "お気に入り度 [number]"
+                 }
+    }
+
+]
