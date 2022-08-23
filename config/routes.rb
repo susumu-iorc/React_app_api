@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
       get "userbase/check", to:"userbase#check"
       get "userbase/get", to:"userbase#get"
+      post "userbase/update", to:"userbase#update"
 
   end
 end

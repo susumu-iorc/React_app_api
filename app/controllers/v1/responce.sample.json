@@ -42,6 +42,19 @@
                   "count"    : "訪問数 [number]",
                   "favorite" : "お気に入り度 [number]"
                  }
-    }
+    },
 
+    {"comment" : "住所登録",
+     "success" : "住所登録（更新）ができたか, true: 成功 | false: 失敗 [bool]",
+     "message" : "メッセージ, create: 新規登録 | update, 更新 | その他エラーメッセージ[string]",
+     "data"    : {
+                  "uid"            : "更新しようとしたuidを返却する [string]",
+                  "user_post_code" : "成功した際にユーザーの郵便番号 [string]",
+                  "user_pref"      : "成功した際にユーザーの都道府県 [string]",
+                  "user_city"      : "成功した際にユーザーの市区町村 [string]",
+                  "user_area"      : "成功した際にユーザーの町域番地 [string]",
+                  "user_lat"       : "成功した際にユーザーの緯度 [string]",
+                  "user_lng"       : "成功した際にユーザーの経度 [string]"
+                 }
+    }
 ]
