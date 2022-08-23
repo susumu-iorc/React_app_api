@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   namespace :v1 do
     mount_devise_token_auth_for "User", at: "auth"
     namespace :general do
-      resources :islogin, only: [:index]
+      resources :login
     end
   end
 end
