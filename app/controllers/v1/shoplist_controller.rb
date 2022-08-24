@@ -29,19 +29,53 @@ class V1::ShoplistController < ApplicationController
           @google_res = JSON.parse(response.body)
           @shops = []
           @place_num = 0
+          # お店一覧をjson形式にする
           while !@google_res["results"][ @place_num ].blank?
-            @temp = {"shop-name"    => @google_res["results"][@place_num]["name"],
-                    "shop-address" => @google_res["results"][0]["vicinity"],
-                    "shop-lat"     => @google_res["results"][0]["geometry"]["location"]["lat"],
-                    "shop-lng"     => @google_res["results"][0]["geometry"]["location"]["lng"],
-                    "place-id"     => @google_res["results"][0]["place_id"]}
-            @shops[@place_num] = @temp
+            @shops[@place_num] = {   "shop-name" => @google_res["results"][@place_num]["name"],
+                                  "shop-address" => @google_res["results"][@place_num]["vicinity"],
+                                      "shop-lat" => @google_res["results"][@place_num]["geometry"]["location"]["lat"],
+                                      "shop-lng" => @google_res["results"][@place_num]["geometry"]["location"]["lng"],
+                                      "place-id" => @google_res["results"][@place_num]["place_id"]}
+             
+
+          
+            #Shopがデータベースに存在しなかったらデータベースに保存
+            if !Shop.exists?(place_id: @google_res["results"][@place_num]["place_id"])
+             shop = Shop.new(      place_id: @google_res["results"][@place_num]["place_id"],
+                                  shop_name: @google_res["results"][@place_num]["name"],
+                               shop_address: @google_res["results"][ @place_num ]["vicinity"],
+                                        lat: @google_res["results"][ @place_num ]["geometry"]["location"]["lat"],
+                                        lng: @google_res["results"][ @place_num ]["geometry"]["location"]["lng"])
+              if shop.save
+               # @memo_exists.push("保存しました")
+              else
+               # @memo_exists.push("保存失敗")
+              end
+            end
+
+            # Memoがデータベースに存在しなかっtら作成、保存
+            if Memo.exists?(user_id: current_user.id, place_id: @google_res["results"][@place_num]["place_id"])
+          
+            else
+              memo = Memo.new(  user_id: current_user.id, 
+                               place_id: @google_res["results"][ @place_num ]["place_id"],
+                                   memo: "",
+                                  count: 0,
+                               favorite: 0)
+              if memo.save
+              end
+            end
 
             @place_num += 1
           end
-           puts @shops.to_json
-          result = { succes: true,data:@shops.as_json, uid:current_user.id,total:@place_num,sort:0 }
-                    #result = { succes: false, data:{uid:current_user.id} }
+          result = { succes: true,
+                       data: {   uid: current_user.id,
+                               total: @place_num,
+                                sort: 0,
+                                shop: @shops.as_json
+                             }
+                   }
+
       end
     end
     render json: result

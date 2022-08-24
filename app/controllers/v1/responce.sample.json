@@ -24,13 +24,15 @@
                   "uid" :"確認したuidを返却する [string]",
                   "total" : "取得数[number]",
                   "sort"   : "どのようなソートを行ったか 0: 近い順 | 1: 遠い順 | 2: お気に入り順 [number]",
-                  "0"     :{
+                  "shop":[
+                          {
                             "shop-name"    : "お店の名前 [string]",
                             "shop-address" : "お店の住所 [string]",
                             "shop-lat"     : "お店の緯度 [string]",
                             "shop-lng"     : "お店の経度 [string]",
                             "place-id"     : "お店のplace_id(google api) [string]"
-                           }
+                          }
+                        ]
                  }
     
     },
