@@ -30,19 +30,17 @@ class V1::ShoplistController < ApplicationController
           @shops = []
           @place_num = 0
           while !@google_res["results"][ @place_num ].blank?
-            @temp = { test:"hey",
-                                 "shop-name":    @google_res["results"][@place_num]["name"],
-                                 "shop-address": @google_res["results"][0]["vicinity"],
-                                 "shop-lat":     @google_res["results"][0]["geometry"]["location"]["lat"],
-                                 "shop-lng":     @google_res["results"][0]["geometry"]["location"]["lng"],
-                                 "place-id":     @google_res["results"][0]["place_id"]
-            }
-            @shops.push(@temp)
-            puts @place_num
-            puts @google_res["results"][ @place_num ]["name"]
+            @temp = {"shop-name"    => @google_res["results"][@place_num]["name"],
+                    "shop-address" => @google_res["results"][0]["vicinity"],
+                    "shop-lat"     => @google_res["results"][0]["geometry"]["location"]["lat"],
+                    "shop-lng"     => @google_res["results"][0]["geometry"]["location"]["lng"],
+                    "place-id"     => @google_res["results"][0]["place_id"]}
+            @shops[@place_num] = @temp
+
             @place_num += 1
           end
-          result = { succes: false, data:@shops }
+           puts @shops.to_json
+          result = { succes: true,data:@shops.as_json, uid:current_user.id,total:@place_num,sort:0 }
                     #result = { succes: false, data:{uid:current_user.id} }
       end
     end

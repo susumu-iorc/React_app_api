@@ -32,7 +32,6 @@ class V1::UserbaseController < ApplicationController
     @full_address = URI.encode_www_form_component(@full_address)
     uri = URI.parse("https://maps.googleapis.com/maps/api/geocode/json?new_forward_geocoder=true&address=#{@full_address}&key=#{Constants::GOOGLE_API_KEY}")
 
-    
 
     # データ取得
     http = Net::HTTP.new(uri.host, uri.port)
