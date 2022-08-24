@@ -4,35 +4,35 @@ class V1::UserbaseController < ApplicationController
 
   def check # ユーザーの住所が登録されているかどうかの確認
     if Base.exists?(user_id: current_user.id)
-      render json: { succes: true , data:{uid:current_user.id} }
+      render json: { "succes":  true, "data": {"uid": current_user.id} }
     else
-      render json: { succes: false, data:{uid:current_user.id} }
+      render json: { "succes": false, "data": {"uid": current_user.id} }
     end
   end
 
   def get # 登録されているユーザーの住所取得
     if Base.exists?(user_id: current_user.id)
       @base = Base.find_by(user_id:current_user.id)
-      render json: { succes: true,
-                       data: {
-                                          "uid": current_user.id,
-                               "user-post_code": @base.user_post_code,
-                                    "user-pref": @base.user_pref,
-                                    "user-city": @base.user_city,
-                                    "user-area": @base.user_area,
-                                     "user-lat": @base.lat,
-                                     "user-lng": @base.lng
-                              }
+      render json: { "succes": true,
+                       "data": {
+                                            "uid": current_user.id,
+                                 "user-post_code": @base.user_post_code,
+                                      "user-pref": @base.user_pref,
+                                      "user-city": @base.user_city,
+                                      "user-area": @base.user_area,
+                                       "user-lat": @base.lat,
+                                       "user-lng": @base.lng
+                                }
                     }
     else
-      render json: { succes: false, data:{uid:current_user.id} }
+      render json: { "success": false, "data": { "uid": current_user.id} }
     end
   end
 
   def update # ユーザーの住所登録
     # postが送られてきているかどうか
     if request.body.read.blank?
-      render json: { success: false, message: "データが正常にpostされませんでした"}
+      render json: { "success": false, "message": "データが正常にpostされませんでした"}
       return
     end
 
@@ -74,7 +74,7 @@ class V1::UserbaseController < ApplicationController
     # 保存処理
     if @user_lat.blank? || @user_lng.blank?
       # 緯度経度が正しく取得できなかった場合の処理
-      render json: {success: false, message: "データが不正"}
+      render json: {"success": false, "message": "データが不正"}
       return
     end
 
@@ -92,11 +92,11 @@ class V1::UserbaseController < ApplicationController
                                   lng: @user_lng 
                       )
         # update が成功した
-        render json: {success: true, message: "住所更新完了",data:result_data}
+        render json: { "success":  true, "message": "住所更新完了", "data": result_data}
         return
       else
         # update が失敗した
-        render json: {success: false, message: "住所更新失敗"}
+        render json: { "success": false, "message": "住所更新失敗"}
         return
       end
 
@@ -114,10 +114,10 @@ class V1::UserbaseController < ApplicationController
                        )
       if @base.save
         # 初回登録できた
-        render json: {success: true, message: "住所登録成功",data:result_data}
+        render json: { "success":  true, "message": "住所登録成功", "data": result_data}
       else
         # 初回登録失敗
-        render json: {success: false, message: "住所登録失敗"}
+        render json: { "success": false, "message": "住所登録失敗"}
       end
     end
   end

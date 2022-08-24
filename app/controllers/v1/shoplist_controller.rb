@@ -6,7 +6,7 @@ class V1::ShoplistController < ApplicationController
 
     if !Base.exists?(user_id: current_user.id)
       # 住所が未登録の場合
-      render json: { succes: false , redirect: "userbase",data:{uid:current_user.id} }
+      render json: { "succes": false, "redirect": "userbase", "data": { "uid": current_user.id} }
       return
     end
     
@@ -15,7 +15,7 @@ class V1::ShoplistController < ApplicationController
 
     if @base.lat.blank? || @base.lng.blank?
         # 住所がおかしい場合
-        render json: {succes: false , redirect: "userbase",data:{uid:current_user.id} }
+        render json: { "succes": false , "redirect": "userbase", "data": { "uid": current_user.id} }
         return
     end
  
@@ -80,14 +80,14 @@ class V1::ShoplistController < ApplicationController
 
       @place_num += 1
     end
-    render json: { succes: true,
-                     data: {
-                               uid: current_user.id,
-                             total: @place_num,
-                              sort: 0,
-                              shop: @shops.as_json
-                            }
-                   }
+    render json: { "succes": true,
+                     "data": {
+                                 uid: current_user.id,
+                               total: @place_num,
+                                sort: 0,
+                                shop: @shops.as_json
+                              }
+                  }
 
   end
 end
