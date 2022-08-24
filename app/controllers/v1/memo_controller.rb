@@ -4,10 +4,11 @@ class V1::MemoController < ApplicationController
     post_body = JSON.parse(request.body.read)
     if !Memo.exists?(user_id: current_user.id, place_id: post_body["place-id"])
       render json: { succes: false, data:{uid:current_user.id, "place-id": post_body["place-id"]} }
-    else
-      @shop = Shop.find_by( place_id: post_body["place-id"])
-      @memo = Memo.find_by( user_id:current_user.id, place_id: post_body["place-id"])
-      result_data =  {
+      return
+    end
+    @shop = Shop.find_by( place_id: post_body["place-id"])
+    @memo = Memo.find_by( user_id:current_user.id, place_id: post_body["place-id"])
+    result_data =  {
                  "uid": current_user.id,
             "place-id": post_body["place-id"],
            "shop-name": @shop["shop_name"],
@@ -19,6 +20,5 @@ class V1::MemoController < ApplicationController
             "favorite": @memo["favorite"]
       }
       render json: result_data
-    end
   end
 end
