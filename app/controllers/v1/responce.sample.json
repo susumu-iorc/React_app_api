@@ -36,13 +36,18 @@
                  }
     
     },
-    {"comment" : "お店の情報",
+    {"comment" : "メモの情報",
      "success" : "お店の情報が取得できたかどうか true: 成功 | false: 失敗",
      "data"    : {
-                  "uid"      : "確認したuidを返却する [string]",
-                  "memo"     : "メモ [string]",
-                  "count"    : "訪問数 [number]",
-                  "favorite" : "お気に入り度 [number]"
+                  "uid"          : "確認したuidを返却する [string]",
+                  "place-id"     : "お店のplace_id(google api) [string]",
+                  "shop-name"    : "お店の名前 [string]",
+                  "shop-address" : "お店の住所 [string]",
+                  "shop-lat"     : "お店の緯度 [string]",
+                  "shop-lng"     : "お店の経度 [string]",
+                  "memo"         : "メモ [string]",
+                  "count"        : "訪問数 [number]",
+                  "favorite"     : "お気に入り度 [number]"
                  }
     },
 

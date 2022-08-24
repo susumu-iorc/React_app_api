@@ -10,5 +10,8 @@ Rails.application.routes.draw do
 
       # shoplist関連     
       get  "shoplist/get", to:"shoplist#get"
+
+      # memo関連
+      get  "memo/get", to:"memo#get"
   end
 end
