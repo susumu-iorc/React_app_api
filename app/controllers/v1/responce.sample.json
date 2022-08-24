@@ -9,12 +9,12 @@
      "success" : "ユーザーが存在するかどうか, true: 存在する | false: 存在しない [bool]",
      "data"    : {
                   "uid"            :"確認したuidを返却する [string]",
-                  "user_post_code" : "ユーザーの郵便番号 [string]",
-                  "user_pref"      : "ユーザーの都道府県 [string]",
-                  "user_city"      : "ユーザーの市区町村 [string]",
-                  "user_area"      : "ユーザーの町域番地 [string]",
-                  "user_lat"       : "ユーザーの緯度 [string]",
-                  "user_lng"       : "ユーザーの経度 [string]"
+                  "user-post_code" : "ユーザーの郵便番号 [string]",
+                  "user-pref"      : "ユーザーの都道府県 [string]",
+                  "user-city"      : "ユーザーの市区町村 [string]",
+                  "user-area"      : "ユーザーの町域番地 [string]",
+                  "user-lat"       : "ユーザーの緯度 [string]",
+                  "user-lng"       : "ユーザーの経度 [string]"
                  }
 
     },
@@ -25,11 +25,11 @@
                   "total" : "取得数[number]",
                   "sort"   : "どのようなソートを行ったか 0: 近い順 | 1: 遠い順 | 2: お気に入り順 [number]",
                   "0"     :{
-                            "shop_name"    : "お店の名前 [string]",
-                            "shop_address" : "お店の住所 [string]",
-                            "shop_lat"     : "お店の緯度 [string]",
-                            "shop_lng"     : "お店の経度 [string]",
-                            "place_id"     : "お店のplace_id(google api) [string]"
+                            "shop-name"    : "お店の名前 [string]",
+                            "shop-address" : "お店の住所 [string]",
+                            "shop-lat"     : "お店の緯度 [string]",
+                            "shop-lng"     : "お店の経度 [string]",
+                            "place-id"     : "お店のplace_id(google api) [string]"
                            }
                  }
     
@@ -49,12 +49,12 @@
      "message" : "メッセージ, create: 新規登録 | update, 更新 | その他エラーメッセージ[string]",
      "data"    : {
                   "uid"            : "更新しようとしたuidを返却する [string]",
-                  "user_post_code" : "成功した際にユーザーの郵便番号 [string]",
-                  "user_pref"      : "成功した際にユーザーの都道府県 [string]",
-                  "user_city"      : "成功した際にユーザーの市区町村 [string]",
-                  "user_area"      : "成功した際にユーザーの町域番地 [string]",
-                  "user_lat"       : "成功した際にユーザーの緯度 [string]",
-                  "user_lng"       : "成功した際にユーザーの経度 [string]"
+                  "user-post_code" : "成功した際にユーザーの郵便番号 [string]",
+                  "user-pref"      : "成功した際にユーザーの都道府県 [string]",
+                  "user-city"      : "成功した際にユーザーの市区町村 [string]",
+                  "user-area"      : "成功した際にユーザーの町域番地 [string]",
+                  "user-lat"       : "成功した際にユーザーの緯度 [string]",
+                  "user-lng"       : "成功した際にユーザーの経度 [string]"
                  }
     }
 ]

@@ -14,12 +14,12 @@ class V1::UserbaseController < ApplicationController
     if Base.exists?(user_id: current_user.id)
       @base = Base.find_by(user_id:current_user.id)
       render json: { succes: true , data:{uid:            current_user.id,
-                                          user_post_code: @base.user_post_code,
-                                          user_pref:      @base.user_pref,
-                                          user_city:      @base.user_city,
-                                          user_area:      @base.user_area,
-                                          user_lat:       @base.lat,
-                                          user_lng:       @base.lng} }
+                                          "user-post_code": @base.user_post_code,
+                                          "user-pref":      @base.user_pref,
+                                          "user-city":      @base.user_city,
+                                          "user-area":      @base.user_area,
+                                          "user-lat":       @base.lat,
+                                          "user-lng":       @base.lng} }
     else
       render json: { succes: false, data:{uid:current_user.id} }
     end
@@ -51,12 +51,12 @@ class V1::UserbaseController < ApplicationController
     @user_lng = @google_res["results"][0]["geometry"]["location"]["lng"]
 
     result_data = {user_id:current_user.id,
-                   user_post_code: params["user_post_code"],
-                   user_pref:      params["user_pref"],
-                   user_city:      params["user_city"],
-                   user_area:      params["user_area"],
-                   user_lat:            @user_lat,
-                   user_lng:            @user_lng }
+                   "user-post_code": params["user_post_code"],
+                   "user-pref":      params["user_pref"],
+                   "user-city":      params["user_city"],
+                   "user-area":      params["user_area"],
+                   "user-lat":            @user_lat,
+                   "user-lng":            @user_lng }
     # 保存処理
     if @user_lat.blank? || @user_lng.blank?
       # 緯度経度が正しく取得できなかった場合の処理
