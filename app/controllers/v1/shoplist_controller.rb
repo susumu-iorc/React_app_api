@@ -23,18 +23,49 @@ class V1::ShoplistController < ApplicationController
         logger.debug response.code
         logger.debug response.body
         return JSON.parse(response.body)
+
+  end
+
+  def get_duration(__from_lat, __from_lng, __place_id, __APIKEY) # 移動時間算出
+    uri = URI.parse("https://maps.googleapis.com/maps/api/directions/json?origin=#{__from_lat},#{__from_lng}&destination=place_id:#{__place_id}&travelMode=WALKING&language=ja&key=#{__APIKEY}")
+
+    @query = uri.query
+
+    # データ取得
+    http    = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Get.new(uri.request_uri)
+
+    # httpsのサイトに送るときは要記述
+    http.use_ssl = true
+
+    # リクエストを送る
+    response = http.request(request)
+
+    # レスポンスの確認
+    logger.debug response.code
+    logger.debug response.body
+    tmp = JSON.parse(response.body)
+    #result = []
+    #results = {     "distance": tmp["routes"]["legs"]["distance"]["value"],
+    #            "distance_txt": tmp["routes"]["legs"]["distance"]["text"]
+    #           }
+    return  {"place-id": __place_id,
+             "distance": {  "text": tmp["routes"][0]["legs"][0]["distance"]["text"], 
+                           "value": tmp["routes"][0]["legs"][0]["distance"]["value"]},
+             "duration": {  "text": tmp["routes"][0]["legs"][0]["duration"]["text"], 
+                           "value": tmp["routes"][0]["legs"][0]["duration"]["value"]}
+             }
   end
 
   def sort_shops(__shops, __sort, __total) # shopのソート
+    result = []
     case __sort
-    when 2
+    when 2 # お気に入り順
       favo_3 = []
       favo_2 = []
       favo_1 = []
       favo_0 = []
       num = 0
-      result = []
-      puts "test-------------------------------------"
       while num < __total
        memo = Memo.find_by( place_id: __shops[num]["place-id"], user_id: current_user.id)
         case memo.favorite
@@ -62,11 +93,40 @@ class V1::ShoplistController < ApplicationController
       for tmp_shop in favo_0
         result.push(tmp_shop)
       end
-    when 1
+
+    when 1,0 # 距離順
+      num = 0
+      distance_list = []
+
+      while num < __total
+         tmp = get_duration(@base.lat,@base.lng,__shops[num]["place-id"], Constants::GOOGLE_API_KEY)
+         distance_list.push({"key": num, "value": tmp[:distance][:value]})
+         num += 1
+      end
+
+      case __sort # 近い or 遠い
+      when 1  #近い
+        result_tmp = distance_list.sort do |a,b|
+          a[:value] <=> b[:value] 
+        end
+      when 0 # 遠い
+        result_tmp = distance_list.sort do |a,b|
+          b[:value] <=> a[:value] 
+        end
+      end
+
+      num = 0
+      while num < __total
+        result.push(__shops[result_tmp[num][:key]])
+        num += 1
+      end
+
     else
     end
-    return result
+
+   return result
   end
+  
   def get # shop list を取得
     # postが送られてきているかどうか
     post_sort = 0
