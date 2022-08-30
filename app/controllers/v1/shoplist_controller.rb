@@ -47,11 +47,11 @@ class V1::ShoplistController < ApplicationController
     @google_res[0] = get_googlemap_list(@base.lat,@base.lng,Constants::GOOGLE_API_KEY)
     @shop_list_count = 0
 
- 
     while @shop_list_count < 5 && !@google_res[@shop_list_count]["next_page_token"].blank?
       @google_res[@shop_list_count + 1] = get_googlemap_list(@base.lat,@base.lng,Constants::GOOGLE_API_KEY,@google_res[@shop_list_count]["next_page_token"])
-      @shop_list_count += 1
-
+      if !@google_res[@shop_list_count + 1].blank? 
+        @shop_list_count += 1
+      end
     end
 
 
