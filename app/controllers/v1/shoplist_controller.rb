@@ -2,7 +2,7 @@ require 'net/http'
 class V1::ShoplistController < ApplicationController
   before_action :authenticate_v1_user!
   
-  def get_googlemap_list(__lat, __lng, __APIKEY, __next_page_token = "")
+  def get_googlemap_list(__lat, __lng, __APIKEY, __next_page_token = "") # googlemapからshopリスト取得
         # PLACE API のURI
 
         uri = URI.parse("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=#{__lat},#{__lng}&radius=500&types=restaurant&language=ja&key=#{__APIKEY}&pagetoken=#{__next_page_token}")
@@ -25,7 +25,57 @@ class V1::ShoplistController < ApplicationController
         return JSON.parse(response.body)
   end
 
+  def sort_shops(__shops, __sort, __total) # shopのソート
+    case __sort
+    when 2
+      favo_3 = []
+      favo_2 = []
+      favo_1 = []
+      favo_0 = []
+      num = 0
+      result = []
+      puts "test-------------------------------------"
+      while num < __total
+       memo = Memo.find_by( place_id: __shops[num]["place-id"], user_id: current_user.id)
+        case memo.favorite
+        when 3
+          favo_3.push(__shops[num])
+        when 2
+          favo_2.push(__shops[num])
+        when 1
+          favo_1.push(__shops[num])
+        when 0
+          favo_0.push(__shops[num])
+        end
+        
+       num += 1
+      end
+      for tmp_shop in favo_3
+        result.push(tmp_shop)
+      end
+      for tmp_shop in favo_2
+        result.push(tmp_shop)
+      end
+      for tmp_shop in favo_1
+        result.push(tmp_shop)
+      end
+      for tmp_shop in favo_0
+        result.push(tmp_shop)
+      end
+    when 1
+    else
+    end
+    return result
+  end
   def get # shop list を取得
+    # postが送られてきているかどうか
+    post_sort = 0
+    if !request.body.read.blank?
+      post_body = JSON.parse(request.body.read)
+      if post_body["sort"] == 1 || post_body["sort"] == 2
+        post_sort = post_body["sort"] 
+      end 
+    end
 
     if !Base.exists?(user_id: current_user.id)
       # 住所が未登録の場合
@@ -63,12 +113,12 @@ class V1::ShoplistController < ApplicationController
       @place_num = 0
       # お店一覧をjson形式にする
       while !@google_res[@res_num]["results"][ @place_num ].blank?
-        @shops[@total] = {    "shop-name" => @google_res[@res_num]["results"][@place_num]["name"],
+        @shops[@total] = {        "shop-name" => @google_res[@res_num]["results"][@place_num]["name"],
                                "shop-address" => @google_res[@res_num]["results"][@place_num]["vicinity"],
                                    "shop-lat" => @google_res[@res_num]["results"][@place_num]["geometry"]["location"]["lat"],
                                    "shop-lng" => @google_res[@res_num]["results"][@place_num]["geometry"]["location"]["lng"],
                                    "place-id" => @google_res[@res_num]["results"][@place_num]["place_id"]
-                              }
+                          }
               
         #Shopがデータベースに存在しなかったらデータベースに保存
         if !Shop.exists?(place_id: @google_res[@res_num]["results"][@place_num]["place_id"])
@@ -103,14 +153,14 @@ class V1::ShoplistController < ApplicationController
       end
       @res_num += 1
     end
-
-
+    # 並べ替え
+    @sorted_shops = sort_shops(@shops, post_sort, @total)
     render json: { "succes": true,
                      "data": {
                                  uid: current_user.id,
                                total: @total,
-                                sort: 0,
-                                shop: @shops.as_json
+                                sort: post_sort,
+                                shop: @sorted_shops.as_json
                               }
                   }
 
