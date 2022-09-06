@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_16_070608) do
+ActiveRecord::Schema.define(version: 2022_09_06_042431) do
 
   create_table "bases", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "user_id"
@@ -20,6 +20,17 @@ ActiveRecord::Schema.define(version: 2022_08_16_070608) do
     t.text "user_area"
     t.string "lat"
     t.string "lng"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "distances", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.string "place_id"
+    t.integer "distance"
+    t.string "distance_text"
+    t.integer "duration"
+    t.string "duration_text"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

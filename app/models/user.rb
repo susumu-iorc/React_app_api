@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
 
   has_many :memos
   has_many :bases
+  has_many :distances
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 end

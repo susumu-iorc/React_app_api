@@ -4,16 +4,16 @@ class V1::UserbaseController < ApplicationController
 
   def check # ユーザーの住所が登録されているかどうかの確認
     if Base.exists?(user_id: current_user.id)
-      render json: { "succes":  true, "data": {"uid": current_user.id} }
+      render json: { "success":  true, "data": {"uid": current_user.id} }
     else
-      render json: { "succes": false, "data": {"uid": current_user.id} }
+      render json: { "success": false, "data": {"uid": current_user.id} }
     end
   end
 
   def get # 登録されているユーザーの住所取得
     if Base.exists?(user_id: current_user.id)
       @base = Base.find_by(user_id:current_user.id)
-      render json: { "succes": true,
+      render json: { "success": true,
                        "data": {
                                             "uid": current_user.id,
                                  "user-post_code": @base.user_post_code,
@@ -91,6 +91,8 @@ class V1::UserbaseController < ApplicationController
                                   lat: @user_lat,
                                   lng: @user_lng 
                       )
+        # distanceモデルを削除
+        Distance.where(user_id: current_user.id).delete_all
         # update が成功した
         render json: { "success":  true, "message": "住所更新完了", "data": result_data}
         return
@@ -103,6 +105,13 @@ class V1::UserbaseController < ApplicationController
     else
       
       # 住所の初回登録
+      puts current_user.id
+      puts post_body["user-post-code"]
+      puts post_body["user-pref"]
+      puts post_body["user-city"]
+      puts   post_body["user-area"]
+      puts @user_lat
+      puts @user_lng
       @base = Base.new(
                               user_id: current_user.id,
                        user_post_code: post_body["user-post-code"],

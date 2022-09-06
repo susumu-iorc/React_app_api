@@ -26,7 +26,17 @@ class V1::ShoplistController < ApplicationController
 
   end
 
-  def get_duration(__from_lat, __from_lng, __place_id, __APIKEY) # 移動時間算出
+  def get_duration(__from_lat, __from_lng, __place_id, __uid, __APIKEY) # 移動時間算出
+    load_dist = Distance.find_by(place_id: __place_id, user_id: __uid)
+    if !load_dist.blank?
+     return  {"place-id": __place_id,
+              "distance": { "text": load_dist.distance_text, 
+                           "value": load_dist.distance},
+              "duration": { "text": load_dist.duration_text, 
+                           "value": load_dist.duration}
+      }
+
+    end
     uri = URI.parse("https://maps.googleapis.com/maps/api/directions/json?origin=#{__from_lat},#{__from_lng}&destination=place_id:#{__place_id}&travelMode=WALKING&language=ja&key=#{__APIKEY}")
 
     @query = uri.query
@@ -49,6 +59,20 @@ class V1::ShoplistController < ApplicationController
     #results = {     "distance": tmp["routes"]["legs"]["distance"]["value"],
     #            "distance_txt": tmp["routes"]["legs"]["distance"]["text"]
     #           }
+    # モデル作成
+    dist = Distance.new(
+                               user_id: __uid,
+                              place_id: __place_id,
+                              distance: tmp["routes"][0]["legs"][0]["distance"]["value"],
+                         distance_text: tmp["routes"][0]["legs"][0]["distance"]["text"],
+                              duration: tmp["routes"][0]["legs"][0]["duration"]["value"],
+                         duration_text: tmp["routes"][0]["legs"][0]["duration"]["text"]
+                         )
+  if dist.save
+    puts "dist-save-OK"
+  else
+    puts "dist-save-NO"
+  end
     return  {"place-id": __place_id,
              "distance": {  "text": tmp["routes"][0]["legs"][0]["distance"]["text"], 
                            "value": tmp["routes"][0]["legs"][0]["distance"]["value"]},
@@ -99,7 +123,7 @@ class V1::ShoplistController < ApplicationController
       distance_list = []
 
       while num < __total
-         tmp = get_duration(@base.lat,@base.lng,__shops[num]["place-id"], Constants::GOOGLE_API_KEY)
+         tmp = get_duration(@base.lat, @base.lng, __shops[num]["place-id"], current_user.id, Constants::GOOGLE_API_KEY)
          distance_list.push({"key": num, "value": tmp[:distance][:value]})
          num += 1
       end
@@ -158,11 +182,13 @@ class V1::ShoplistController < ApplicationController
     @shop_list_count = 0
 
     while @shop_list_count < 5 && !@google_res[@shop_list_count]["next_page_token"].blank?
-      @google_res[@shop_list_count + 1] = get_googlemap_list(@base.lat,@base.lng,Constants::GOOGLE_API_KEY,@google_res[@shop_list_count]["next_page_token"])
+      sleep 2
+      @google_res[@shop_list_count + 1] = get_googlemap_list(@base.lat, @base.lng, Constants::GOOGLE_API_KEY,@google_res[@shop_list_count]["next_page_token"])
       if !@google_res[@shop_list_count + 1].blank? 
         @shop_list_count += 1
       end
     end
+
 
 
     @shops = []

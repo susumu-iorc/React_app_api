@@ -1,4 +1,4 @@
 class Memo < ApplicationRecord
-    belongs_to :users, optional: true
-  end
+  belongs_to :users, optional: true
+end
   
