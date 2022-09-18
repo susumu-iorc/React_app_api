@@ -199,12 +199,7 @@ class V1::ShoplistController < ApplicationController
       @place_num = 0
       # お店一覧をjson形式にする
       while !@google_res[@res_num]["results"][ @place_num ].blank?
-        @shops[@total] = {        "shop-name" => @google_res[@res_num]["results"][@place_num]["name"],
-                               "shop-address" => @google_res[@res_num]["results"][@place_num]["vicinity"],
-                                   "shop-lat" => @google_res[@res_num]["results"][@place_num]["geometry"]["location"]["lat"],
-                                   "shop-lng" => @google_res[@res_num]["results"][@place_num]["geometry"]["location"]["lng"],
-                                   "place-id" => @google_res[@res_num]["results"][@place_num]["place_id"]
-                          }
+        shop_favo = 0
               
         #Shopがデータベースに存在しなかったらデータベースに保存
         if !Shop.exists?(place_id: @google_res[@res_num]["results"][@place_num]["place_id"])
@@ -231,9 +226,21 @@ class V1::ShoplistController < ApplicationController
                            favorite: 0
                           )
           if memo.save
-          else
+          else            
           end
+        else
+          # メモが既に存在するならお気に入り度取得
+          shop_favo = Memo.select(:favorite).find_by( place_id: @google_res[@res_num]["results"][@place_num]["place_id"], user_id: current_user.id).favorite
         end
+
+        @shops[@total] = {     "shop-name" => @google_res[@res_num]["results"][@place_num]["name"],
+                            "shop-address" => @google_res[@res_num]["results"][@place_num]["vicinity"],
+                                "favorite" => shop_favo,
+                                "shop-lat" => @google_res[@res_num]["results"][@place_num]["geometry"]["location"]["lat"],
+                                "shop-lng" => @google_res[@res_num]["results"][@place_num]["geometry"]["location"]["lng"],
+                                "place-id" => @google_res[@res_num]["results"][@place_num]["place_id"]
+                          }
+
         @place_num += 1
         @total += 1
       end
