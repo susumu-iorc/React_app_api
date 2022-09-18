@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       get  "shoplist/get", to:"shoplist#get"
 
       # memo関連
+      get  "memo/get/:pid" , to:"memo#get"
       get  "memo/get"    , to:"memo#get"
       post  "memo/update", to:"memo#update"
   end
