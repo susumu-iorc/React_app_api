@@ -232,10 +232,14 @@ class V1::ShoplistController < ApplicationController
           # メモが既に存在するならお気に入り度取得
           shop_favo = Memo.select(:favorite).find_by( place_id: @google_res[@res_num]["results"][@place_num]["place_id"], user_id: current_user.id).favorite
         end
-
+        durations = get_duration(@base.lat, @base.lng, @google_res[@res_num]["results"][@place_num]["place_id"], current_user.id, Constants::GOOGLE_API_KEY)
         @shops[@total] = {     "shop-name" => @google_res[@res_num]["results"][@place_num]["name"],
                             "shop-address" => @google_res[@res_num]["results"][@place_num]["vicinity"],
                                 "favorite" => shop_favo,
+                           "distance-text" => durations[:distance][:text],
+                          "distance-value" => durations[:distance][:value],
+                           "duration-text" => durations[:duration][:text],
+                          "duration-value" => durations[:duration][:value],
                                 "shop-lat" => @google_res[@res_num]["results"][@place_num]["geometry"]["location"]["lat"],
                                 "shop-lng" => @google_res[@res_num]["results"][@place_num]["geometry"]["location"]["lng"],
                                 "place-id" => @google_res[@res_num]["results"][@place_num]["place_id"]
