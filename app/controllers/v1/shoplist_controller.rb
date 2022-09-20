@@ -154,11 +154,12 @@ class V1::ShoplistController < ApplicationController
   def get # shop list を取得
     # postが送られてきているかどうか
     post_sort = 0
-    if !request.body.read.blank?
-      post_body = JSON.parse(request.body.read)
-      if post_body["sort"] == 1 || post_body["sort"] == 2
-        post_sort = post_body["sort"] 
-      end 
+    if !params[:sort].blank?
+      if params[:sort]== "1" || params[:sort] == "2"
+        post_sort = params[:sort].to_i
+      else
+        post_sort = 0
+      end
     end
 
     if !Base.exists?(user_id: current_user.id)

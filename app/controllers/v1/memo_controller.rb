@@ -39,7 +39,7 @@ class V1::MemoController < ApplicationController
                   }
   end
 
-  def update # memo の更新
+  def patch # memo の更新
     # postが送られてきているかどうか
     if request.body.read.blank?
       render json: { "success": false, "message": "データが正常にpostされませんでした"}

@@ -5,15 +5,16 @@ Rails.application.routes.draw do
     mount_devise_token_auth_for "User", at: "auth"
       # 住所関連
       get  "userbase/check" , to:"userbase#check"
-      get  "userbase/get"   , to:"userbase#get"
-      post "userbase/update", to:"userbase#update"
+      get  "userbase"   , to:"userbase#get"
+      patch "userbase", to:"userbase#patch"
 
       # shoplist関連     
-      get  "shoplist/get", to:"shoplist#get"
+      get  "shoplist/:sort", to:"shoplist#get"
+      get  "shoplist", to:"shoplist#get"
 
       # memo関連
-      get  "memo/get/:pid" , to:"memo#get"
-      get  "memo/get"    , to:"memo#get"
-      post  "memo/update", to:"memo#update"
+      get  "memo/:pid" , to:"memo#get"
+      get  "memo"    , to:"memo#get"
+      patch  "memo", to:"memo#patch"
   end
 end

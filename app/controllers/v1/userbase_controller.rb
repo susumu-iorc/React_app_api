@@ -29,7 +29,7 @@ class V1::UserbaseController < ApplicationController
     end
   end
 
-  def update # ユーザーの住所登録
+  def patch # ユーザーの住所登録
     # postが送られてきているかどうか
     if request.body.read.blank?
       render json: { "success": false, "message": "データが正常にpostされませんでした"}
