@@ -129,13 +129,13 @@ class V1::ShoplistController < ApplicationController
       end
 
       case __sort # 近い or 遠い
-      when 1  #近い
-        result_tmp = distance_list.sort do |a,b|
-          a[:value] <=> b[:value] 
-        end
-      when 0 # 遠い
+      when 1  #遠い
         result_tmp = distance_list.sort do |a,b|
           b[:value] <=> a[:value] 
+        end
+      when 0 # 近い
+        result_tmp = distance_list.sort do |a,b|
+          a[:value] <=> b[:value] 
         end
       end
 
