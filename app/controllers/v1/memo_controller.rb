@@ -11,15 +11,15 @@ class V1::MemoController < ApplicationController
 
 
     # 指定されたメモが存在するかどうか
-    if !Memo.exists?(place_id: params[:pid], user_id: current_user.id)
+    if !Memo.exists?(place_id: params[:pid], user_id: current_user.id) || !Distance.exists?(place_id: params[:pid], user_id:current_user.id)
       render json: { "succes": false, "data": { "uid": current_user.id, "place-id": params[:pid]}}
       return
     end
 
     # メモ情報の取得
-    @shop = Shop.find_by( place_id: params[:pid])
-    @memo = Memo.find_by( place_id: params[:pid], user_id: current_user.id)
-
+    @shop     = Shop.find_by( place_id: params[:pid])
+    @memo     = Memo.find_by( place_id: params[:pid], user_id: current_user.id)
+    @distance = Distance.find_by(place_id: params[:pid], user_id:current_user.id)
     render json: { "success": true,
                       "data": {
                                          "uid": current_user.id,
@@ -30,7 +30,11 @@ class V1::MemoController < ApplicationController
                                     "shop-lng": @shop["lng"],
                                         "memo": @memo["memo"],
                                        "count": @memo["count"],
-                                    "favorite": @memo["favorite"]
+                                    "favorite": @memo["favorite"],
+                               "distance-text": @distance[:distance_text],
+                              "distance-value": @distance[:distance],
+                               "duration-text": @distance[:duration_text],
+                              "duration-value": @distance[:duration]
                                }
                   }
   end
